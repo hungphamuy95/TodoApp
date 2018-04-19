@@ -1,0 +1,67 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using TodoApp.Interfaces;
+using TodoApp.Database;
+using Newtonsoft.Json;
+using TodoApp.Models;
+
+namespace TodoApp.Controllers
+{
+    [Produces("application/json")]
+    [Route("api/[controller]")]
+    public class NoteController : Controller
+    {
+        private readonly INoteRepository _noteRepository;
+        public NoteController(INoteRepository noteRepository)
+        {
+            _noteRepository = noteRepository;
+        }
+        [HttpGet, Authorize]
+        public Task<IEnumerable<NoteModel>> Get()
+        {
+            return GetNoteFactor();
+        }
+        private async Task<IEnumerable<NoteModel>> GetNoteFactor()
+        {
+            var notes = await _noteRepository.GetAllNotes();
+            return notes;
+        }
+
+        [HttpGet("{id}")]
+        public Task<NoteModel>GetSingleNote(string id)
+        {
+            return GetSingleNoteFactor(id);
+        }
+        private async Task<NoteModel>GetSingleNoteFactor(string id)
+        {
+            var note = await _noteRepository.GetNote(id) ?? new Models.NoteModel();
+            return note;
+        }
+        [HttpPost]
+        public void AddNewNote([FromBody]NoteModel item)
+        {
+            _noteRepository.AddNote(new NoteModel()
+            {
+                Test = item.Test,
+                Body = item.Body,
+                CreatedOn = DateTime.Now
+            });
+        }
+        [HttpPut("{id}")]
+        public async Task<bool> UpdateNote(string id, [FromBody]NoteModel item)
+        {
+            return await _noteRepository.UpdateNoteDocument(id, item);
+        }
+        [HttpDelete("{id}")]
+        public async Task<bool> NoteDelelte(string id)
+        {
+            return await _noteRepository.RemoveNote(id);
+        }
+    }
+}
