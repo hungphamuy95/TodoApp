@@ -16,6 +16,6 @@ namespace TodoApp.Models
         public string Test { get; set; } = string.Empty;
         public DateTime UpdatedOn { get; set; }
         public DateTime CreatedOn { get; set; }
-        public int UserId { get; set; } = 0;
+        public string UserId { get; set; }
     }
 }

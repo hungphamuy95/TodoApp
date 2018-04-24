@@ -15,5 +15,6 @@ namespace TodoApp.Interfaces
         Task<bool> UpdateNote(string id, string body);
         Task<bool> UpdateNoteDocument(string id, NoteModel item);
         Task<bool> RemoveAllNotes();
+        Task<IEnumerable<NoteModel>> GetAllNotesByUser(string userid);
     }
 }

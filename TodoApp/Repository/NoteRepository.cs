@@ -42,6 +42,19 @@ namespace TodoApp.Repository
             }
         }
 
+        public async Task<IEnumerable<NoteModel>> GetAllNotesByUser(string userid)
+        {
+            try
+            {
+                // TODO: blah blah
+                return null;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<NoteModel> GetNote(string id)
         {
             var filter = Builders<NoteModel>.Filter.Eq("_id", id);

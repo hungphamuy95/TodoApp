@@ -9,6 +9,7 @@ using TodoApp.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using TodoApp.Database;
 using Newtonsoft.Json;
 using TodoApp.Models;
@@ -18,7 +19,8 @@ using Microsoft.Extensions.Configuration;
 namespace TodoApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{ver:apiVersion}/[controller]")]
     public class UserController : Controller
     {
         private readonly IUserInfoRepository _userInfoRepository;
@@ -32,8 +34,10 @@ namespace TodoApp.Controllers
         [Authorize]
         public string GetAllUser()
         {
-            var currentUser = HttpContext.User;
-            return currentUser.Claims.FirstOrDefault().Value.ToString();
+            var currentUserId = HttpContext.User;
+            
+            
+            return currentUserId.Claims.FirstOrDefault().Value.ToLower();
         }
         [HttpPost]
         [AllowAnonymous]
@@ -43,7 +47,7 @@ namespace TodoApp.Controllers
             var user = await _userInfoRepository.GetSingleuserByPassword(item);
             if (user != null)
             {
-                var tokenstring = "Bearer " + BuildToken(item);
+                var tokenstring = "Bearer " + BuildToken(user);
                 return new JsonResult(new { YourToken = tokenstring});
             }
             return new JsonResult(new { message="incorrect account or password"});
@@ -53,7 +57,8 @@ namespace TodoApp.Controllers
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, item.UserName)
+                new Claim(JwtRegisteredClaimNames.Sub, item.UserName),
+                new Claim(JwtRegisteredClaimNames.NameId, item._id)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

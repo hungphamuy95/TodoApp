@@ -74,21 +74,21 @@ namespace TodoApp.Controllers
                     Body = "TestNote1",
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
-                    UserId = 1
+                    //UserId = 1
                 });
                 _noteRepository.AddNote(new NoteModel()
                 {
                     Body = "TestNote2",
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
-                    UserId = 2
+                    //UserId = 2
                 });
                 _noteRepository.AddNote(new NoteModel()
                 {
                     Body = "TestNote3",
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
-                    UserId = 3
+                    //UserId = 3
                 });
                 _typeNoteRepository.AddTypeNote(new TypeNoteModel()
                 {

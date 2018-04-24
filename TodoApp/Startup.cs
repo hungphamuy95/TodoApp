@@ -10,10 +10,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using TodoApp.Models;
 using TodoApp.Interfaces;
 using TodoApp.Repository;
+using TodoApp.Filters;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TodoApp
 {
@@ -29,6 +33,28 @@ namespace TodoApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Api versioning service
+            services.AddApiVersioning(opt =>
+            {
+                opt.ApiVersionReader = new MediaTypeApiVersionReader();
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.ReportApiVersions = true;
+                opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ApiVersionSelector = new CurrentImplementationApiVersionSelector(opt);
+            });
+
+            // enable cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials()
+                .Build());
+            });
+
+            // Json web token authiencation
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -42,29 +68,26 @@ namespace TodoApp
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                 };
             });
-            services.AddMvc();
+
+            // Set custom filter for http pipeline
+            services.AddMvc(opt=> {
+                opt.Filters.Add(typeof(JsonExceptionFilter));
+            });
             services.Configure<SettingModel>(options =>
             {
                 options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
                 options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                      .AllowAnyMethod()
-                      .AllowAnyHeader()
-                      .AllowCredentials()
-                .Build());
-            });
-            services.AddTransient<IUserInfoRepository, UserInfoRepository>();
-            services.AddTransient<INoteRepository, NoteRepository>();
-            services.AddTransient<ITypeNoteRepository, TypeNoteRepository>();
+            services.AddSingleton<IUserInfoRepository, UserInfoRepository>();
+            services.AddSingleton<INoteRepository, NoteRepository>();
+            services.AddSingleton<ITypeNoteRepository, TypeNoteRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

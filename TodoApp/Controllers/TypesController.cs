@@ -12,7 +12,8 @@ using TodoApp.Models;
 namespace TodoApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{ver:apiVersion}/[controller]")]
     public class TypesController : Controller
     {
         private readonly ITypeNoteRepository _typeRepo;

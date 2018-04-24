@@ -14,7 +14,8 @@ using TodoApp.Models;
 namespace TodoApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{ver:apiVersion}/[controller]")]
     public class NoteController : Controller
     {
         private readonly INoteRepository _noteRepository;
@@ -34,6 +35,7 @@ namespace TodoApp.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public Task<NoteModel>GetSingleNote(string id)
         {
             return GetSingleNoteFactor(id);
@@ -44,21 +46,25 @@ namespace TodoApp.Controllers
             return note;
         }
         [HttpPost]
+        [Authorize]
         public void AddNewNote([FromBody]NoteModel item)
         {
             _noteRepository.AddNote(new NoteModel()
             {
                 Test = item.Test,
                 Body = item.Body,
-                CreatedOn = DateTime.Now
+                CreatedOn = DateTime.Now,
+                UserId = HttpContext.User.Claims.FirstOrDefault().Value.ToString()
             });
         }
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<bool> UpdateNote(string id, [FromBody]NoteModel item)
         {
             return await _noteRepository.UpdateNoteDocument(id, item);
         }
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<bool> NoteDelelte(string id)
         {
             return await _noteRepository.RemoveNote(id);
