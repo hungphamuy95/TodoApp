@@ -1,0 +1,7 @@
+language: csharp
+solution: TodoApp.sln
+atrix:
+  include:
+    - dotnet: 2.0
+    - mono: none
+    - mono: latest
