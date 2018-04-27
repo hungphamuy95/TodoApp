@@ -69,5 +69,14 @@ namespace TodoApp.Controllers
         {
             return await _noteRepository.RemoveNote(id);
         }
+
+        [Route("getnotesbyuser")]
+        [HttpGet]
+        [Authorize]
+        public async Task<IEnumerable<NoteModel>> GetNotesByUser()
+        {
+            var userId = HttpContext.User.Claims.Skip(1).FirstOrDefault().Value.ToString();
+            return await _noteRepository.GetAllNotesByUser(userId);
+        }
     }
 }

@@ -46,9 +46,8 @@ namespace TodoApp.Repository
         {
             try
             {
-                // TODO: blah blah
-                // Redeploy
-                return null;
+                var res= await _context.Notes.Find(Builders<NoteModel>.Filter.Eq("UserId", userid)).ToListAsync();
+                return res;
             }
             catch(Exception ex)
             {
