@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using TodoApp.Models;
 using MongoDB.Driver;
 using MongoDB.Bson;
+using MongoDB.Driver.Linq;
 
 namespace TodoApp.Repository
 {
@@ -42,11 +43,15 @@ namespace TodoApp.Repository
             }
         }
 
-        public async Task<IEnumerable<NoteModel>> GetAllNotesByUser(string userid)
+        public async Task<object> GetAllNotesByUser(string userid)
         {
             try
             {
-                var res= await _context.Notes.Find(Builders<NoteModel>.Filter.Eq("UserId", userid)).ToListAsync();
+                var query = from p in _context.UserInfo.AsQueryable()
+                            join o in _context.Notes on p.NoteRef equals o.UserId into joined
+                            where p._id == userid
+                            select new { p.UserName, p._id, joined };
+                var res = await query.SingleOrDefaultAsync();
                 return res;
             }
             catch(Exception ex)

@@ -54,8 +54,8 @@ namespace TodoApp.Controllers
                 Test = item.Test,
                 Body = item.Body,
                 CreatedOn = DateTime.Now,
-                UserId = HttpContext.User.Claims.FirstOrDefault().Value.ToString()
-            });
+                UserId = HttpContext.User.Claims.Skip(2).FirstOrDefault().Value.ToString()
+        });
         }
         [HttpPut("{id}")]
         [Authorize]
@@ -73,7 +73,7 @@ namespace TodoApp.Controllers
         [Route("getnotesbyuser")]
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<NoteModel>> GetNotesByUser()
+        public async Task<object> GetNotesByUser()
         {
             var userId = HttpContext.User.Claims.Skip(1).FirstOrDefault().Value.ToString();
             return await _noteRepository.GetAllNotesByUser(userId);

@@ -11,6 +11,7 @@ namespace TodoApp.Models
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string _id { get; set; }
+        public string NoteRef { get; set; }
         public string UserName { get; set;}
         public string PassWord { get; set; }
         public DateTime CreateOn { get; set; }

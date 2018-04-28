@@ -58,14 +58,15 @@ namespace TodoApp.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, item.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, item._id)
+                new Claim(JwtRegisteredClaimNames.NameId, item._id),
+                new Claim(JwtRegisteredClaimNames.GivenName, item.NoteRef)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Issuer"],
                 claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: creds
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);

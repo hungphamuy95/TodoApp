@@ -50,6 +50,7 @@ namespace TodoApp.Controllers
                 _userInfoRepi.RemoveAll();
                 _userInfoRepi.AddUser(new UserInfoModel()
                 {
+                    NoteRef=Guid.NewGuid().ToString(),
                     UserName="admin",
                     PassWord="admin",
                     CreateOn=DateTime.Now,
@@ -57,6 +58,7 @@ namespace TodoApp.Controllers
                 });
                 _userInfoRepi.AddUser(new UserInfoModel()
                 {
+                    NoteRef = Guid.NewGuid().ToString(),
                     UserName = "admin1",
                     PassWord = "admin1",
                     CreateOn = DateTime.Now,
@@ -64,6 +66,7 @@ namespace TodoApp.Controllers
                 });
                 _userInfoRepi.AddUser(new UserInfoModel()
                 {
+                    NoteRef = Guid.NewGuid().ToString(),
                     UserName = "admin2",
                     PassWord = "admin2",
                     CreateOn = DateTime.Now,
