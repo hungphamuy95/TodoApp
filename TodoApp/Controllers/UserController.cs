@@ -48,9 +48,9 @@ namespace TodoApp.Controllers
             if (user != null)
             {
                 var tokenstring = "Bearer " + BuildToken(user);
-                return new JsonResult(new { YourToken = tokenstring});
+                return new JsonResult(new { yourtoken = tokenstring, success =true});
             }
-            return new JsonResult(new { message="incorrect account or password"});
+            return new JsonResult(new { message="incorrect account or password", success = false});
         }
         #region Helper
         private string BuildToken(UserInfoModel item)
