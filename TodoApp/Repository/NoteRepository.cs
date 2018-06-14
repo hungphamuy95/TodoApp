@@ -31,11 +31,19 @@ namespace TodoApp.Repository
             }
         }
 
-        public async Task<IEnumerable<NoteModel>> GetAllNotes()
+        public async Task<IEnumerable<NoteModel>> GetAllNotes(int page)
         {
             try
             {
-                return await _context.Notes.Find(_ => true).ToListAsync();
+                var total = _context.Notes.Find(_ => true).Count();
+                var pageSize = 3; // set your page size
+                var skip = pageSize * (page - 1);
+                var canPage = skip < total;
+                if (!canPage)
+                {
+                    return null;
+                }
+                return await _context.Notes.Find(_ => true).Skip(skip).Limit(pageSize).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -118,11 +126,13 @@ namespace TodoApp.Repository
         {
             var updatedItem = new NoteModel
             {
-                _id=id,
-                Body=item.Body,
-                Test=item.Test,
-                UserId=item.UserId,
-                UpdatedOn=DateTime.Now
+                _id = id,
+                Body = item.Body,
+                Test = item.Test,
+                UserId = item.UserId,
+                UpdatedOn = DateTime.Now,
+                ImageUrl = item.ImageUrl,
+                Title = item.Title
             };
                 ReplaceOneResult actionResult = await _context.Notes.ReplaceOneAsync(Builders<NoteModel>.Filter.Eq("_id", id), updatedItem, new UpdateOptions { IsUpsert = true });
                 return actionResult.IsAcknowledged && actionResult.ModifiedCount > 0;

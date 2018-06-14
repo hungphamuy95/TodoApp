@@ -24,15 +24,15 @@ namespace TodoApp.Controllers
             _userInfoRepi = userInfoRepository;
         }
         // GET api/values
-        [HttpGet]
-        public Task<string> Get()
+        [HttpGet("{page}")]
+        public Task<string> Get(int page)
         {
-            return GetNoteFactor();
+            return GetNoteFactor(page);
         }
 
-        private async Task<string> GetNoteFactor()
+        private async Task<string> GetNoteFactor(int page)
         {
-            var notes = await _noteRepository.GetAllNotes();
+            var notes = await _noteRepository.GetAllNotes(page);
             return JsonConvert.SerializeObject(notes);
         }
 

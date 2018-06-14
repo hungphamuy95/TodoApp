@@ -8,7 +8,7 @@ namespace TodoApp.Interfaces
 {
     public interface INoteRepository
     {
-        Task<IEnumerable<NoteModel>> GetAllNotes(); 
+        Task<IEnumerable<NoteModel>> GetAllNotes(int page); 
         Task<NoteModel> GetNote(string id);
         Task AddNote(NoteModel item);
         Task<bool> RemoveNote(string id);

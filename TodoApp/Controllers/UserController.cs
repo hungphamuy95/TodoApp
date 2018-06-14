@@ -50,7 +50,7 @@ namespace TodoApp.Controllers
                 var tokenstring = "Bearer " + BuildToken(user);
                 return new JsonResult(new { yourtoken = tokenstring, success =true});
             }
-            return new JsonResult(new { message="incorrect account or password", success = false});
+            return new JsonResult(new { message="Tài khoản không tồn tại hoặc mật khẩu không đúng", success = false});
         }
         #region Helper
         private string BuildToken(UserInfoModel item)
@@ -59,7 +59,7 @@ namespace TodoApp.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, item.UserName),
                 new Claim(JwtRegisteredClaimNames.NameId, item._id),
-                new Claim(JwtRegisteredClaimNames.GivenName, item.NoteRef)
+                //new Claim(JwtRegisteredClaimNames.GivenName, item.NoteRef)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

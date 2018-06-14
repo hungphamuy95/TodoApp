@@ -12,10 +12,12 @@ namespace TodoApp.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
+        public string Title { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
         public string Test { get; set; } = string.Empty;
         public DateTime UpdatedOn { get; set; }
         public DateTime CreatedOn { get; set; }
         public string UserId { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

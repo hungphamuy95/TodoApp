@@ -23,14 +23,15 @@ namespace TodoApp.Controllers
         {
             _noteRepository = noteRepository;
         }
-        [HttpGet, Authorize]
-        public Task<IEnumerable<NoteModel>> Get()
+        [HttpGet, AllowAnonymous]
+        [Route("getallnotes/{page}")]
+        public Task<IEnumerable<NoteModel>> Get(int page)
         {
-            return GetNoteFactor();
+            return GetNoteFactor(page);
         }
-        private async Task<IEnumerable<NoteModel>> GetNoteFactor()
+        private async Task<IEnumerable<NoteModel>> GetNoteFactor(int page)
         {
-            var notes = await _noteRepository.GetAllNotes();
+            var notes = await _noteRepository.GetAllNotes(page);
             return notes;
         }
 
@@ -54,6 +55,8 @@ namespace TodoApp.Controllers
                 Test = item.Test,
                 Body = item.Body,
                 CreatedOn = DateTime.Now,
+                ImageUrl = item.ImageUrl,
+                Title = item.Title,
                 UserId = HttpContext.User.Claims.Skip(2).FirstOrDefault().Value.ToString()
         });
         }
