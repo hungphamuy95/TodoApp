@@ -16,5 +16,6 @@ namespace TodoApp.Interfaces
         Task<bool> UpdateNoteDocument(string id, NoteModel item);
         Task<bool> RemoveAllNotes();
         Task<object> GetAllNotesByUser(string userid);
+        Task<int> GetNumberOfPage();
     }
 }

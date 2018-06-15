@@ -24,6 +24,12 @@ namespace TodoApp.Controllers
             _noteRepository = noteRepository;
         }
         [HttpGet, AllowAnonymous]
+        [Route("getnumpage")]
+        public async Task<JsonResult> GetNumPage()
+        {
+            return new JsonResult(new { numpage = await _noteRepository.GetNumberOfPage() });
+        }
+        [HttpGet, AllowAnonymous]
         [Route("getallnotes/{page}")]
         public Task<IEnumerable<NoteModel>> Get(int page)
         {

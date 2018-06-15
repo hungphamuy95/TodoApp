@@ -81,6 +81,20 @@ namespace TodoApp.Repository
             }
         }
 
+        public async Task<int> GetNumberOfPage()
+        {
+            try
+            {
+                var numOfRecord = _context.Notes.Find(_ => true).Count();
+                var numOfPage = Math.Floor((decimal)numOfRecord / 3) + 1;
+                return (int)numOfPage;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<bool> RemoveAllNotes()
         {
             try
