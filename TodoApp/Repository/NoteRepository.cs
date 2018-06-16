@@ -88,8 +88,17 @@ namespace TodoApp.Repository
         {
             try
             {
+                int numOfPage;
                 var numOfRecord = _context.Notes.Find(_ => true).Count();
-                var numOfPage = Math.Floor((decimal)numOfRecord / 3) + 1;
+                var temp = numOfRecord % 3;
+                if (temp == 0)
+                {
+                    numOfPage = (int)Math.Floor((decimal)numOfRecord / 3);
+                }
+                else
+                {
+                    numOfPage = (int)Math.Floor((decimal)numOfRecord / 3) + 1;
+                }
                 return (int)numOfPage;
             }
             catch(Exception ex)
