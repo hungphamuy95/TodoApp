@@ -9,6 +9,7 @@ using TodoApp.Models;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Driver.Linq;
+using System.Net;
 
 namespace TodoApp.Repository
 {
@@ -31,7 +32,7 @@ namespace TodoApp.Repository
             }
         }
 
-        public async Task<IEnumerable<NoteModel>> GetAllNotes(int page)
+        public async Task<IEnumerable<object>> GetAllNotes(int page)
         {
             try
             {
@@ -43,7 +44,9 @@ namespace TodoApp.Repository
                 {
                     return null;
                 }
-                return await _context.Notes.Find(_ => true).Skip(skip).Limit(pageSize).ToListAsync();
+                var query = from p in _context.Notes.AsQueryable() select new { p.Title, p._id, p.CreatedOn, p.Test, p.ImageUrl };
+                var res = await query.Skip(skip).Take(pageSize).ToListAsync();
+                return res;
             }
             catch (Exception ex)
             {
@@ -141,7 +144,7 @@ namespace TodoApp.Repository
             var updatedItem = new NoteModel
             {
                 _id = id,
-                Body = item.Body,
+                Body = WebUtility.HtmlEncode(item.Body),
                 Test = item.Test,
                 UserId = item.UserId,
                 UpdatedOn = DateTime.Now,

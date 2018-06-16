@@ -10,6 +10,7 @@ using TodoApp.Interfaces;
 using TodoApp.Database;
 using Newtonsoft.Json;
 using TodoApp.Models;
+using System.Net;
 
 namespace TodoApp.Controllers
 {
@@ -31,21 +32,24 @@ namespace TodoApp.Controllers
         }
         [HttpGet, AllowAnonymous]
         [Route("getallnotes/{page}")]
-        public Task<IEnumerable<NoteModel>> Get(int page)
+        public Task<IEnumerable<object>> Get(int page)
         {
             return GetNoteFactor(page);
         }
-        private async Task<IEnumerable<NoteModel>> GetNoteFactor(int page)
+        private async Task<IEnumerable<object>> GetNoteFactor(int page)
         {
             var notes = await _noteRepository.GetAllNotes(page);
             return notes;
         }
 
         [HttpGet("{id}")]
-        [Authorize]
-        public Task<NoteModel>GetSingleNote(string id)
+        [AllowAnonymous]
+        public async Task<JsonResult>GetSingleNote(string id)
         {
-            return GetSingleNoteFactor(id);
+            var singleNote = await GetSingleNoteFactor(id);
+
+
+            return new JsonResult(new { id = singleNote._id, title = singleNote.Title, body = WebUtility.HtmlDecode(singleNote.Body), shortcontent = singleNote.Test, updatedon = singleNote.UpdatedOn, createdon=singleNote.CreatedOn, userid= singleNote.UserId, imageurl = singleNote.ImageUrl });
         }
         private async Task<NoteModel>GetSingleNoteFactor(string id)
         {
@@ -59,7 +63,7 @@ namespace TodoApp.Controllers
             _noteRepository.AddNote(new NoteModel()
             {
                 Test = item.Test,
-                Body = item.Body,
+                Body = WebUtility.HtmlEncode(item.Body),
                 CreatedOn = DateTime.Now,
                 ImageUrl = item.ImageUrl,
                 Title = item.Title,
