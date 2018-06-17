@@ -70,6 +70,19 @@ namespace TodoApp.Repository
             }
         }
 
+        public async Task<IEnumerable<object>> GetAllNoteTitle()
+        {
+            try
+            {
+                var query = from p in _context.Notes.AsQueryable() select new { p._id, p.Title };
+                return await query.ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<NoteModel> GetNote(string id)
         {
             var filter = Builders<NoteModel>.Filter.Eq("_id", id);

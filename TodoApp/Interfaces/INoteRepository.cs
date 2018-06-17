@@ -17,5 +17,6 @@ namespace TodoApp.Interfaces
         Task<bool> RemoveAllNotes();
         Task<object> GetAllNotesByUser(string userid);
         Task<int> GetNumberOfPage();
+        Task<IEnumerable<object>> GetAllNoteTitle();
     }
 }

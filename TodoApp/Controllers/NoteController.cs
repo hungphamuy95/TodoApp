@@ -41,7 +41,12 @@ namespace TodoApp.Controllers
             var notes = await _noteRepository.GetAllNotes(page, pageSize);
             return notes;
         }
-
+        [HttpGet]
+        [Route("getnotetitle")]
+        public async Task<IEnumerable<object>> GetNoteTitile()
+        {
+            return await _noteRepository.GetAllNoteTitle();
+        }
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<JsonResult>GetSingleNote(string id)
