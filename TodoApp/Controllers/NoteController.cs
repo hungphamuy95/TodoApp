@@ -31,14 +31,14 @@ namespace TodoApp.Controllers
             return new JsonResult(new { numpage = await _noteRepository.GetNumberOfPage() });
         }
         [HttpGet, AllowAnonymous]
-        [Route("getallnotes/{page}")]
-        public Task<IEnumerable<object>> Get(int page)
+        [Route("getallnotes/{page}&{pageSize}")]
+        public Task<IEnumerable<object>> Get(int page, int pageSize)
         {
-            return GetNoteFactor(page);
+            return GetNoteFactor(page, pageSize);
         }
-        private async Task<IEnumerable<object>> GetNoteFactor(int page)
+        private async Task<IEnumerable<object>> GetNoteFactor(int page, int pageSize)
         {
-            var notes = await _noteRepository.GetAllNotes(page);
+            var notes = await _noteRepository.GetAllNotes(page, pageSize);
             return notes;
         }
 

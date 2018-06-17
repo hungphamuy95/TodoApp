@@ -32,12 +32,11 @@ namespace TodoApp.Repository
             }
         }
 
-        public async Task<IEnumerable<object>> GetAllNotes(int page)
+        public async Task<IEnumerable<object>> GetAllNotes(int page, int pageSize)
         {
             try
             {
                 var total = _context.Notes.Find(_ => true).Count();
-                var pageSize = 3; // set your page size
                 var skip = pageSize * (page - 1);
                 var canPage = skip < total;
                 if (!canPage)
