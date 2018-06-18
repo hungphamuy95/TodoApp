@@ -44,7 +44,7 @@ namespace TodoApp.Repository
                     return null;
                 }
                 var query = from p in _context.Notes.AsQueryable() select new { p.Title, p._id, p.CreatedOn, p.Test, p.ImageUrl };
-                var res = await query.Skip(skip).Take(pageSize).ToListAsync();
+                var res = await query.OrderByDescending(x => x.CreatedOn).Skip(skip).Take(pageSize).ToListAsync();
                 return res;
             }
             catch (Exception ex)
