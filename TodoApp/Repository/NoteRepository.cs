@@ -74,8 +74,8 @@ namespace TodoApp.Repository
         {
             try
             {
-                var query = from p in _context.Notes.AsQueryable() select new { p._id, p.Title };
-                return await query.ToListAsync();
+                var query = from p in _context.Notes.AsQueryable() select new { p._id, p.Title, p.CreatedOn };
+                return await query.OrderByDescending(x=>x.CreatedOn).ToListAsync();
             }
             catch(Exception ex)
             {
