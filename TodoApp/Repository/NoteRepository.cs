@@ -162,15 +162,18 @@ namespace TodoApp.Repository
 
         public async Task<bool> UpdateNoteDocument(string id, NoteModel item)
         {
+            var query = from p in _context.Notes.AsQueryable() where (p._id==id) select new { p.CreatedOn, p.UserId };
+            var res = await query.FirstOrDefaultAsync();
             var updatedItem = new NoteModel
             {
                 _id = id,
                 Body = WebUtility.HtmlEncode(item.Body),
                 Test = item.Test,
-                UserId = item.UserId,
+                UserId = res.UserId,
                 UpdatedOn = DateTime.Now,
                 ImageUrl = item.ImageUrl,
-                Title = item.Title
+                Title = item.Title,
+                CreatedOn = res.CreatedOn
             };
                 ReplaceOneResult actionResult = await _context.Notes.ReplaceOneAsync(Builders<NoteModel>.Filter.Eq("_id", id), updatedItem, new UpdateOptions { IsUpsert = true });
                 return actionResult.IsAcknowledged && actionResult.ModifiedCount > 0;
