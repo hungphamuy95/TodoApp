@@ -10,6 +10,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using System.Net;
+using TodoApp;
 
 namespace TodoApp.Repository
 {
@@ -43,7 +44,7 @@ namespace TodoApp.Repository
                 {
                     return null;
                 }
-                var query = from p in _context.Notes.AsQueryable() select new { p.Title, p._id, p.CreatedOn, p.Test, p.ImageUrl };
+                var query = from p in _context.Notes.AsQueryable() select new { p.Title, p._id, p.CreatedOn, p.Test, p.ImageUrl, p.seoUrl };
                 var res = await query.OrderByDescending(x => x.CreatedOn).Skip(skip).Take(pageSize).ToListAsync();
                 return res;
             }
@@ -173,7 +174,8 @@ namespace TodoApp.Repository
                 UpdatedOn = DateTime.Now,
                 ImageUrl = item.ImageUrl,
                 Title = item.Title,
-                CreatedOn = res.CreatedOn
+                CreatedOn = res.CreatedOn,
+                seoUrl = Helper.RemoveUnicode(item.Title)
             };
                 ReplaceOneResult actionResult = await _context.Notes.ReplaceOneAsync(Builders<NoteModel>.Filter.Eq("_id", id), updatedItem, new UpdateOptions { IsUpsert = true });
                 return actionResult.IsAcknowledged && actionResult.ModifiedCount > 0;

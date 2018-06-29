@@ -19,5 +19,6 @@ namespace TodoApp.Models
         public DateTime CreatedOn { get; set; }
         public string UserId { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
+        public string seoUrl { get; set; } = string.Empty;
     }
 }

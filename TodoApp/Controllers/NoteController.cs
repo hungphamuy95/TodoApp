@@ -11,6 +11,7 @@ using TodoApp.Database;
 using Newtonsoft.Json;
 using TodoApp.Models;
 using System.Net;
+using TodoApp;
 
 namespace TodoApp.Controllers
 {
@@ -72,7 +73,8 @@ namespace TodoApp.Controllers
                 CreatedOn = DateTime.Now,
                 ImageUrl = item.ImageUrl,
                 Title = item.Title,
-                UserId = HttpContext.User.Claims.Skip(2).FirstOrDefault().Value.ToString()
+                UserId = HttpContext.User.Claims.Skip(2).FirstOrDefault().Value.ToString(),
+                seoUrl=Helper.RemoveUnicode(item.Title)
         });
         }
         [HttpPut("{id}")]
