@@ -7,6 +7,7 @@ using TodoApp.Database;
 using Microsoft.Extensions.Options;
 using TodoApp.Models;
 using MongoDB.Driver;
+using TodoApp;
 using MongoDB.Bson;
 
 namespace TodoApp.Repository
@@ -58,7 +59,7 @@ namespace TodoApp.Repository
         {
             try
             {
-                var filter = Builders<UserInfoModel>.Filter.Eq(x => x.UserName, item.UserName) & Builders<UserInfoModel>.Filter.Eq(x => x.PassWord, item.PassWord);
+                var filter = Builders<UserInfoModel>.Filter.Eq(x => x.UserName, item.UserName) & Builders<UserInfoModel>.Filter.Eq(x => x.PassWord, Helper.MD5Hash(item.PassWord));
                 var retrieveUser = await _context.UserInfo.Find(filter).FirstOrDefaultAsync();
                 return retrieveUser != null ? retrieveUser : null;
             }
