@@ -81,6 +81,7 @@ namespace TodoApp
             services.AddSingleton<IUserInfoRepository, UserInfoRepository>();
             services.AddSingleton<INoteRepository, NoteRepository>();
             services.AddSingleton<ITypeNoteRepository, TypeNoteRepository>();
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,6 +95,8 @@ namespace TodoApp
             }
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
             app.UseMvc();
         }
     }

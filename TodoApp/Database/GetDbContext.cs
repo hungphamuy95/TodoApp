@@ -13,7 +13,7 @@ namespace TodoApp.Database
         public readonly IMongoDatabase _database = null;
         public GetDbContext(IOptions<SettingModel> settings)
         {
-            var client = new MongoClient(MongoUrl.Create(settings.Value.ConnectionString));
+            var client = new MongoClient(settings.Value.ConnectionString);
             if (client != null)
                 _database = client.GetDatabase(settings.Value.Database);
         }

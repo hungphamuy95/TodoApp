@@ -101,7 +101,7 @@ namespace TodoApp.Repository
                 throw ex;
             }
         }
-        public async Task<IEnumerable<TypeNoteModel>> TypeAndNoteChildren()
+        public Task<IEnumerable<TypeNoteModel>> TypeAndNoteChildren()
         {
             try
             {

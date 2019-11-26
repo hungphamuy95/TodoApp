@@ -112,7 +112,9 @@ namespace TodoApp.Repository
                 {
                     numOfPage = (int)Math.Floor((decimal)numOfRecord / 3) + 1;
                 }
-                return (int)numOfPage;
+
+                var numOfPageFactory = await Task.FromResult<int>(numOfPage);
+                return numOfPageFactory;
             }
             catch(Exception ex)
             {
