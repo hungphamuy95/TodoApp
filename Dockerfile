@@ -11,5 +11,6 @@ RUN dotnet publish -c Release -o out
 # Build runtime image
 FROM microsoft/aspnetcore:2.0
 WORKDIR /app
-COPY --from=build-env /app/out .
+ENV ASPNETCORE_ENVIRONMENT Local
 ENTRYPOINT ["dotnet", "TodoApp.dll"]
+COPY --from=builder /sln/dist .
