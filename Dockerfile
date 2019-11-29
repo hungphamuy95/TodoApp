@@ -13,5 +13,5 @@ RUN dotnet publish -c Release -o app
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.0 AS runtime
 WORKDIR /app
-COPY --from=build /app .
+COPY --from=build /app/TodoApp/out ./
 ENTRYPOINT ["dotnet", "TodoApp.dll"]
