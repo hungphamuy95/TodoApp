@@ -12,5 +12,5 @@ RUN dotnet publish -c Release -o out
 FROM microsoft/aspnetcore:2.0
 WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT Local
+COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "TodoApp.dll"]
-COPY --from=builder /sln/dist .
