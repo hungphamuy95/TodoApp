@@ -1,16 +1,18 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
-COPY ./TodoApp/*.csproj ./
+COPY *.sln .
+COPY TodoApp/*.csproj ./TodoApp/
 RUN dotnet restore
 
 # copy and build everything else
 COPY . ./
+WORKDIR /app/TodoApp
 RUN dotnet publish -c Release -o out
+
 # Build runtime image
-FROM microsoft/aspnetcore:2.0
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0 AS runtime
 WORKDIR /app
-ENV ASPNETCORE_ENVIRONMENT Local
-COPY --from=publish /app .
+COPY --from=build /app/TodoApp/out ./
 ENTRYPOINT ["dotnet", "TodoApp.dll"]
