@@ -4,6 +4,8 @@ WORKDIR /app
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY ./TodoApp/*.csproj ./
+COPY ./TodoApp.Test/*.csproj ./
+
 RUN dotnet restore
 
 # copy and build everything else
