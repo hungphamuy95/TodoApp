@@ -13,5 +13,5 @@ RUN dotnet publish -c Release -o app
 # Build runtime image
 FROM microsoft/aspnetcore:2.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/TodoApp/out ./
+COPY --from=build /app .
 ENTRYPOINT ["dotnet", "TodoApp.dll"]
