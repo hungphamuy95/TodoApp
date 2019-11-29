@@ -8,11 +8,11 @@ RUN dotnet restore
 
 # copy and build everything else
 COPY TodoApp/. ./TodoApp/
-WORKDIR /app/TodoApp
-RUN dotnet publish -c Release -o out
+WORKDIR /app
+RUN dotnet publish -c Release -o app
 
 # Build runtime image
 FROM microsoft/aspnetcore:2.0
 WORKDIR /app
-COPY --from=build /app/TodoApp/out ./
+COPY --from=build /app .
 ENTRYPOINT ["dotnet", "TodoApp.dll"]
