@@ -15,5 +15,5 @@ RUN dotnet build TodoApp.Test
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
 WORKDIR /app
-COPY --from=build-env /app/out/ .
+COPY --from=build-env /app/TodoApp/out/ .
 CMD ["dotnet", "TodoApp.dll"]
