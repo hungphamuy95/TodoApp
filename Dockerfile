@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
@@ -10,9 +10,10 @@ RUN dotnet restore
 # copy everything else and build app
 COPY . ./
 RUN dotnet publish TodoApp -c Release -o out
+RUN dotnet build TodoApp.Test
 
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
 WORKDIR /app
-COPY --from=build /app/out/ .
+COPY --from=build-env /app/out/ .
 CMD ["dotnet", "TodoApp.dll"]
