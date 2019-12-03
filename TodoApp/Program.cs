@@ -11,15 +11,18 @@ using Microsoft.Extensions.Logging;
 namespace TodoApp
 {
     public class Program
-    {
-        public static void Main(string[] args)
+    { public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = CreateWebHostBuilder(args).
+                UseKestrel().
+                UseUrls("http://0.0.0.0:" + Environment.GetEnvironmentVariable("PORT")).
+                Build();
+            
+            host.Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
     }
 }
